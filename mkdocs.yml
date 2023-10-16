@@ -1,0 +1,21 @@
+site_name: KU-WIKI
+site_description: 施工中
+site_author: KU informatics
+
+theme:
+  name: material
+  favicon: img/favicon.ico
+
+nav:
+  - Home: index.md
+  - 📅公共订阅日历: misc/📅公共订阅日历.md
+  - 如何恰饭: 
+    - 如何恰饭简介: eat/index.md
+  - 金！: 
+    - 金简介: finance/index.md
+    - CardGPT: finance/CardGPT.md
+  - 科研: 
+    - 科研简介: academic/index.md
+    - 医疗情报学研究室: academic/社会情报学/医疗情报学研究室.md
+  - FAQ: misc/FAQ.md
+  - About: about.md

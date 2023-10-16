@@ -1,4 +1,4 @@
-# KU-WIKI
+# 欢迎访问 KU-WIKI ！
 
 本WIKI基于[mkdocs.org](https://www.mkdocs.org).
 
