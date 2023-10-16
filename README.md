@@ -4,6 +4,8 @@
 
 欢迎大家一起来施工喵。
 
+NOTE：这是README，主页显示的是`docs/index.html`
+
 ## 如何编辑
 
 请在`main`分支下进行编辑。
@@ -30,6 +32,7 @@ python -m mkdocs build
 ```
 python -m mkdocs build
 ```
+别忘了再推送到此`main`分支（开发分支）。
 
 使用如下指令打印帮助：
 ```

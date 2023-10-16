@@ -6,6 +6,8 @@
 
 ## 如何编辑
 
+请在`main`分支下进行编辑。
+
 总之先在`docs`里写文档，`mkdocs.yml`里写目录吧。
 图片请在各自的目录下创建`assets/images`。
 
@@ -23,6 +25,12 @@ python -m mkdocs serve
 ```
 python -m mkdocs build
 ```
+
+使用如下指令推送项目到`gh-pages`分支（部署用分支）：
+```
+python -m mkdocs build
+```
+别忘了再推送到此`main`分支（开发分支）。
 
 使用如下指令打印帮助：
 ```
