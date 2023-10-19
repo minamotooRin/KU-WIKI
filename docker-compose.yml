@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mkdocs:
+    build: .
+    container_name: 'mkdocs'
+    working_dir: '/root/'
+    # environment:
+    tty: true
+    volumes:
+      - ./../minamotooRin.github.io:/root/minamotooRin.github.io
+    ports:
+      - "8000:8000"
