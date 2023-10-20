@@ -1,5 +1,6 @@
 site_name: KU-WIKI
 site_description: 施工中
+site_url: https://0.0.0.0
 site_author: KU informatics
 
 theme:
