@@ -3,13 +3,9 @@ USER root
 
 RUN apt-get update
 
-WORKDIR /root
+WORKDIR /root/KU-WIKI
 
-
-COPY requirements.txt /root/
-
-
-RUN pip install -r /root/requirements.txt
+RUN pip install -r requirements.txt
 
 RUN python -m mkdocs build
 

@@ -7,6 +7,6 @@ services:
     # environment:
     tty: true
     volumes:
-      - ./../minamotooRin.github.io:/root/minamotooRin.github.io
+      - ./:/root/KU-WIKI
     ports:
       - "8000:8000"
