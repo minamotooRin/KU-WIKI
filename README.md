@@ -65,3 +65,11 @@ docker compose up
 ```shell
 docker compose exec mkdocs bash
 ```
+
+执行构建命令
+
+```shell
+python -m mkdocs build
+
+python -m mkdocs serve -a 0.0.0.0:8000/
+```
