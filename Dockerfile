@@ -5,8 +5,6 @@ RUN apt-get update
 
 WORKDIR /root/KU-WIKI
 
+COPY requirements.txt /root/KU-WIKI
+
 RUN pip install -r requirements.txt
-
-RUN python -m mkdocs build
-
-RUN python -m mkdocs serve -a 0.0.0.0:8000
