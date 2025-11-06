@@ -1,22 +1,32 @@
-site_name: KU-WIKI
-site_description: 施工中
+site_name: KyotoU-Chinese-Students-Wiki
+site_description: 京都大学中文学生指南 | 签证、研究、生活实用信息库
 site_url: https://0.0.0.0
-site_author: KU informatics
+site_author: KyotoU informatics
 
 theme:
   name: material
   favicon: img/favicon.ico
+  language: zh
+
+plugins:
+  - search:
+      lang: zh
 
 nav:
   - Home: index.md
-  - 📅公共订阅日历: misc/📅公共订阅日历.md
-  - 如何恰饭: 
-    - 如何恰饭简介: eat/index.md
+  - 快速指南: practical.md
+  - 入学时间表: misc/timeline.md
+  - 实用信息:
+    - 签证与在留资格: visa.md
+    - 住宿指南: housing.md
+    - 健康与医疗: medical.md
+  - 公共订阅日历: misc/公共订阅日历.md
   - 金！: 
     - 金简介: finance/index.md
     - CardGPT: finance/CardGPT.md
   - 科研: 
     - 科研简介: academic/index.md
     - 医疗情报学研究室: academic/社会情报学/医疗情报学研究室.md
+  - 友情链接: links.md
   - FAQ: misc/FAQ.md
   - About: about.md

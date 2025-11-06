@@ -1,73 +1,74 @@
-# KU-WIKI
+# 京都大学中文学生指南
 
-本WIKI基于[mkdocs.org](https://www.mkdocs.org).
+一个为在京大读/将入学的中国院生量身打造的实用中文信息库。这里把入学手续、生活技巧、校园资源和前辈经验都浓缩成易懂的捷径，帮你把时间留给学习和科研。
 
-欢迎大家一起来施工喵。
+---
 
-NOTE：这是README，主页显示的是`docs/index.html`
+## 你是什么身份？选择适合你的路径 👇
 
-## 如何编辑
+| | 还没来京都 | 已经在京都 |
+|---|---|---|
+| **立即需要** | [入学时间表](misc/timeline.md) · [签证指南](visa.md) · [住宿指南](housing.md) | [快速指南](practical.md) · [医疗保险](medical.md) · [友情链接](links.md) |
+| **深入了解** | [科研导师寻找](academic/index.md) · [奖学金信息](links.md) · [校园设施](practical.md) | [科研资源](academic/index.md) · [校内设施](practical.md) · [金融服务](finance/index.md) |
 
-请在`main`分支下进行编辑。
+---
 
-总之先在`docs`里写文档，`mkdocs.yml`里写目录吧。
-图片请在各自的目录下创建`assets/images`。
+## 快速入口（热门话题）
 
-安装 `mkdocs` 以进行测试：
+- 📘 **[快速指南与实用信息](practical.md)** — 本地构建、紧急电话、FAQ、常用链接、排错指南
+- 🛂 **[签证与在留资格](visa.md)** — COE、签证、续签与资格外活动（打工）
+- 🏠 **[住宿指南](housing.md)** — 校内/校外找房、合同与搬家建议
+- 🏥 **[健康与医疗](medical.md)** — 国民健康保険、就诊流程与紧急就医
+- 🎓 **[科研简介](academic/index.md)** — 导师寻找、论文发表、经费申请
+- 💰 **[友情链接](links.md)** — 校内/行政/生活/交通/学习的精选外部资源
 
-```shell
-pip install mkdocs
-```
+## 新手任务清单（到日必做）
 
-使用如下指令在本地搭建服务器以测试：
+1. 入境后 7 日内：住民登记、国民健康保険加入。
+2. 办理手机卡 / 开户：带上在留卡与住民票。
+3. 加入学院/研究室群组：拿到重要通知和资源。
 
-```shell
-python -m mkdocs serve
-```
+（详细流程与时间表见 **[入学时间表](misc/timeline.md)**）
 
-使用如下指令编译（？）项目：
+## 我们的重点（你会在这里找到）
 
-```shell
-python -m mkdocs build
-```
+- 入学与到日流程清单、必备办事模板。
+- 奖学金、科研经费与校内资源导航。
+- 生活技巧：打工规则、垃圾分类、交通卡充值、小众省钱技巧。
 
-使用如下指令推送项目到`gh-pages`分支（部署用分支）：
-```
-python -m mkdocs build
-```
-别忘了再推送到此`main`分支（开发分支）。
+## 本周热闻
 
-使用如下指令打印帮助：
+> 站点更新、重要截止日、线上活动或学院通知等会在这里展示。想上公告？创建 Issue 标注「公告」。
 
-```shell
-mkdocs -h
-```
+### 重大新闻 — 京都大学两位教授荣获 2025 年诺贝尔奖（已确认）
 
-## Project layout
+**2025-10-08** — 京都大学官网已发布消息：本校两位研究者因其在各自领域的杰出贡献，分别获得 2025 年诺贝尔奖。
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+- Susumu Kitagawa — 诺贝尔化学奖（详见校方公告）。详见：京都大学公告（EN）[https://www.kyoto-u.ac.jp/en/news/2025-10-08] 和 诺贝尔委员会新闻稿： [化学新闻稿](https://www.nobelprize.org/prizes/chemistry/2025/press-release/)。
+- Shimon Sakaguchi — 诺贝尔生理学或医学奖（详见校方公告）。详见：京都大学公告（EN）[https://www.kyoto-u.ac.jp/en/news/2025-10-07] 和 诺贝尔委员会新闻稿： [医学新闻稿](https://www.nobelprize.org/prizes/medicine/2025/press-release/)。
 
-## 使用Docker构建本地环境
+学校/学院后续会发布庆祝与说明会安排，请以学院邮件与官网公告为准。如需校内联络或采访类信息，请联系学校新闻处（链接见校方公告页面）。
 
-进入到工程目录下，运行下面的命令构建容器
+## 贡献者（向有爱的人致谢）
 
-```shell
-docker compose up
-```
+想让名字出现在这里：
 
-进入到容器内Terminal
+1. 在仓库发起 PR，编辑 `docs/index.md` 或更新 `docs/data/contributors.yml`。
+2. 提供：姓名 / GitHub（可选） / 院系 / 贡献类型 / 一行简介。
+3. 想显示头像？把 120×120 图片放到 `docs/assets/images/contributors/` 并在 PR 中引用（建议文件名 `github-<handle>.png`）。
 
-```shell
-docker compose exec mkdocs bash
-```
+示例：
 
-执行构建命令
+- 李华 / @lihua
+  - 院系：情報学研究科 硕士
+  - 贡献：经验贴、翻译
+  - 简介：整理了签证与找房流程清单。
 
-```shell
-python -m mkdocs build
+## 想贡献？超简单 👍
 
-python -m mkdocs serve -a 0.0.0.0:8000/
-```
+1. 提 Issue 指出问题或建议新话题。
+2. 提 PR 直接编辑 `docs/`（建议新分支）。
+3. 快速发经验贴：在 `docs/misc/` 建新页面并 PR，维护者会帮忙上导航。
+
+一起把 KU‑WIKI 打造成最实用、最暖心的中文指南库 —— 欢迎加入贡献行列！  
+(维护者注：本地构建步骤见「快速指南与实用信息」。)
