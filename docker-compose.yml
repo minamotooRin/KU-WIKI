@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mkdocs:
+    build: .
+    container_name: 'mkdocs'
+    working_dir: '/root/KU-WIKI'
+    # environment:
+    tty: true
+    volumes:
+      - ./:/root/KU-WIKI
+    ports:
+      - "8000:8000"
