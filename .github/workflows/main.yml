@@ -1,9 +1,8 @@
-name: Build, Update Contributors, and Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main
       - deploy
   workflow_dispatch:
 
@@ -17,13 +16,14 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # 第一步：更新贡献者列表（从GitHub API获取）
   update-contributors:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main branch
+      - name: Checkout deploy branch
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: deploy
           fetch-depth: 0
 
       - name: Set up Python
@@ -51,38 +51,56 @@ jobs:
           import yaml
           import os
           
-          # Read contributors YAML
-          with open('docs/data/contributors.yml', 'r', encoding='utf-8') as f:
-              contributors = yaml.safe_load(f) or []
-          
-          # Generate markdown snippet
-          markdown = "## 贡献者（向有爱的人致谢）\n\n"
-          markdown += f"感谢 {len(contributors)} 位贡献者的支持：\n\n"
-          
-          # Generate contributor grid
-          markdown += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin: 20px 0;">\n'
-          
-          for contributor in contributors[:20]:  # Show top 20
-              login = contributor.get('login', 'Unknown')
-              avatar = contributor.get('avatar_url', '')
-              html_url = contributor.get('html_url', '')
-              contributions = contributor.get('contributions', 0)
+          try:
+              # Read contributors YAML
+              yaml_path = 'docs/data/contributors.yml'
+              if not os.path.exists(yaml_path):
+                  print(f"Warning: {yaml_path} not found, creating empty contributors list")
+                  contributors = []
+              else:
+                  with open(yaml_path, 'r', encoding='utf-8') as f:
+                      data = yaml.safe_load(f)
+                      contributors = data if isinstance(data, list) else (data.get('contributors', []) if isinstance(data, dict) else [])
               
-              if avatar and html_url:
-                  markdown += f'  <a href="{html_url}" title="{login} ({contributions} contributions)" style="text-decoration: none;">\n'
-                  markdown += f'    <img src="{avatar}&s=120" width="60" height="60" alt="{login}" style="border-radius: 50%; margin: 5px;" />\n'
-                  markdown += f'  </a>\n'
-          
-          markdown += '</div>\n\n'
-          markdown += "想让名字出现在这里？发起 PR 贡献代码或内容吧！\n\n"
-          markdown += f"👉 [查看所有 {len(contributors)} 位贡献者](https://github.com/minamotooRin/KU-WIKI/graphs/contributors)\n"
-          
-          # Write to file
-          os.makedirs('docs/data', exist_ok=True)
-          with open('docs/data/contributors.md', 'w', encoding='utf-8') as f:
-              f.write(markdown)
-          
-          print(f"Generated contributors markdown with {len(contributors)} contributors")
+              # Generate markdown snippet
+              markdown = "## 贡献者（向有爱的人致谢）\n\n"
+              markdown += f"感谢 {len(contributors)} 位贡献者的支持：\n\n"
+              
+              # Generate contributor grid
+              markdown += '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin: 20px 0;">\n'
+              
+              for contributor in contributors[:20]:  # Show top 20
+                  login = contributor.get('login', 'Unknown')
+                  avatar = contributor.get('avatar_url', '')
+                  html_url = contributor.get('html_url', '')
+                  contributions = contributor.get('contributions', 0)
+                  
+                  if avatar and html_url:
+                      markdown += f'  <a href="{html_url}" title="{login} ({contributions} contributions)" style="text-decoration: none;">\n'
+                      markdown += f'    <img src="{avatar}&s=120" width="60" height="60" alt="{login}" style="border-radius: 50%; margin: 5px;" />\n'
+                      markdown += f'  </a>\n'
+              
+              markdown += '</div>\n\n'
+              markdown += "想让名字出现在这里？发起 PR 贡献代码或内容吧！\n\n"
+              markdown += f"👉 [查看所有 {len(contributors)} 位贡献者](https://github.com/minamotooRin/KU-WIKI/graphs/contributors)\n"
+              
+              # Ensure directory exists
+              output_dir = 'docs/data'
+              os.makedirs(output_dir, exist_ok=True)
+              
+              # Write to file with error handling
+              output_path = os.path.join(output_dir, 'contributors.md')
+              with open(output_path, 'w', encoding='utf-8') as f:
+                  f.write(markdown)
+              
+              print(f"Successfully generated contributors markdown: {output_path}")
+              print(f"Total contributors: {len(contributors)}")
+              
+          except Exception as e:
+              print(f"Error generating contributors markdown: {e}")
+              import traceback
+              traceback.print_exc()
+              exit(1)
           EOF
 
       - name: Check if contributors changed
@@ -101,31 +119,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/data/contributors.yml docs/data/contributors.md
           git commit -m "chore: update contributors list from GitHub API"
-          git push origin main
+          git push origin deploy
 
-  sync-to-deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: update-contributors
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout main branch
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Push main to deploy branch
-        run: |
-          git push origin main:deploy --force-with-lease
-
+  # 第二步：构建 MkDocs 网站
   build-and-deploy:
-    needs: sync-to-deploy
-    if: always() && (needs.sync-to-deploy.result == 'success' || (github.ref == 'refs/heads/deploy' && needs.update-contributors.result != 'failure'))
+    needs: update-contributors
     runs-on: ubuntu-latest
     steps:
       - name: Checkout deploy branch
@@ -160,9 +158,9 @@ jobs:
         with:
           path: './site'
 
-  deploy:
+  # 第三步：部署到 GitHub Pages
+  deploy-pages:
     needs: build-and-deploy
-    if: github.ref == 'refs/heads/deploy'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
