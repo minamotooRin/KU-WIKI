@@ -1,17 +1,44 @@
 site_name: KyotoU-Chinese-Students-Wiki
 site_description: 京都大学中文学生指南 | 签证、研究、生活实用信息库
-site_url: https://0.0.0.0
+site_url: https://minamotoorin.github.io/KU-WIKI/
 site_author: KyotoU informatics
 
 theme:
   name: material
   favicon: img/favicon.ico
   language: zh
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - toc.follow
+    - search.suggest
+    - search.highlight
 
 markdown_extensions:
   - pymdownx.snippets:
       base_path: .
       check_paths: true
+  - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - tables
+  - footnotes
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - def_list
+  - meta
 
 plugins:
   - search:
