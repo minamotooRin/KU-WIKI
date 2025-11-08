@@ -1,4 +1,4 @@
-name: Update Contributors
+name: Main Workflow
 
 on:
   push:
@@ -10,10 +10,50 @@ permissions:
   contents: write
 
 concurrency:
-  group: "contributors"
+  group: "main"
   cancel-in-progress: false
 
 jobs:
+  # 部署文档
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Configure Git Credentials
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: echo "cache_id=$(date --utc '+%V')" >> $GITHUB_ENV 
+      - uses: actions/cache@v3
+        with:
+          key: mkdocs-material-${{ env.cache_id }}
+          path: .cache
+          restore-keys: |
+            mkdocs-material-
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mkdocs-material
+          pip install pymdown-extensions
+          pip install mkdocs-material-extensions
+      - name: List workspace contents
+        run: |
+          echo "Current directory content:"
+          ls -la
+          echo "docs directory content:"
+          ls -la docs/
+      - name: Build and Deploy
+        run: |
+          echo "Starting mkdocs build..."
+          mkdocs build --verbose
+          echo "Starting mkdocs gh-deploy..."
+          mkdocs gh-deploy --force --verbose
+
   # 更新贡献者列表（从GitHub API获取）
   update-contributors:
     runs-on: ubuntu-latest
