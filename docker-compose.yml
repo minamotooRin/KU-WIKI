@@ -1,12 +1,15 @@
-version: '3'
 services:
   mkdocs:
     build: .
-    container_name: 'mkdocs'
-    working_dir: '/root/KU-WIKI'
-    # environment:
-    tty: true
-    volumes:
-      - ./:/root/KU-WIKI
+    container_name: ku-wiki-mkdocs
     ports:
       - "8000:8000"
+    volumes:
+      - ./docs:/app/docs:ro
+      - ./mkdocs.yml:/app/mkdocs.yml:ro
+    command: mkdocs serve --dev-addr 0.0.0.0:8000
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

@@ -5,8 +5,20 @@ site_author: KyotoU informatics
 
 theme:
   name: material
-  favicon: img/favicon.ico
   language: zh
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: 切换至深色模式
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: 切换至浅色模式
   features:
     - navigation.instant
     - navigation.tracking
@@ -14,6 +26,7 @@ theme:
     - navigation.sections
     - navigation.expand
     - navigation.indexes
+    - navigation.top
     - toc.follow
     - search.suggest
     - search.highlight
@@ -25,18 +38,16 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight:
       anchor_linenums: true
   - pymdownx.inlinehilite
-  - pymdownx.snippets
   - pymdownx.superfences
   - tables
   - footnotes
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
   - def_list
   - meta
 
@@ -53,10 +64,10 @@ nav:
     - 住宿指南: housing.md
     - 健康与医疗: medical.md
   - 公共订阅日历: misc/公共订阅日历.md
-  - 金！: 
+  - 金!:
     - 金简介: finance/index.md
     - CardGPT: finance/CardGPT.md
-  - 科研: 
+  - 科研:
     - 科研简介: academic/index.md
     - 专攻与研究室:
       - 知能情报学专攻:
@@ -81,8 +92,7 @@ nav:
       - 先端数理科学专攻: academic/Advanced_Mathematical_Sciences/index.md
       - 数理工学专攻: academic/Applied_Mathematics_Physics/index.md
       - 系统科学专攻: academic/Systems_Science/index.md
-      - 通信与计算机工程专攻: academic/Communications_Computer_Engineering/index.md
+      - 通信情报系统专攻: academic/Communications_Computer_Engineering/index.md
   - 友情链接: links.md
   - FAQ: misc/FAQ.md
   - About: about.md
-  - 赛博老佛爷临幸纪念碑: misc/memorial.md

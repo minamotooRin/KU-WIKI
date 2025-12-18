@@ -10,172 +10,186 @@ Options:
   --owner OWNER    GitHub repo owner (user or org)
   --repo REPO      GitHub repository name
   --output PATH    Output YAML path (default: docs/data/contributors.yml)
-  --full           Fetch full user profile (name, email if public) for each contributor (one API call per user)
+  --full           Fetch full user profile for each contributor
 
 Authentication:
-  To increase rate limits, set environment variable GITHUB_TOKEN with a personal access token.
-
-This script handles GitHub pagination and writes a YAML list of contributors with fields:
-  - login
-  - name (if available or if --full)
-  - html_url
-  - avatar_url
-  - contributions
-
+  Set GITHUB_TOKEN environment variable to increase rate limits.
 """
+
+import argparse
+import logging
 import os
 import sys
-import argparse
+from typing import List, Optional
+
 import requests
 import yaml
-from typing import Optional, List
-from urllib.parse import urljoin
 
+# Constants
 API_BASE = "https://api.github.com"
+DEFAULT_OUTPUT = "docs/data/contributors.yml"
+PER_PAGE = 100
+REQUEST_TIMEOUT = 10
+PROGRESS_INTERVAL = 10
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s: %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 
-def get_session(token: Optional[str]):
-    s = requests.Session()
+def get_session(token: Optional[str]) -> requests.Session:
+    """Create a configured requests session."""
+    session = requests.Session()
     headers = {
-        'Accept': 'application/vnd.github.v3+json',
-        'User-Agent': 'ku-wiki-contributors-script'
+        "Accept": "application/vnd.github.v3+json",
+        "User-Agent": "ku-wiki-contributors-script",
     }
     if token:
-        headers['Authorization'] = f'token {token}'
-        print(f"Using authenticated GitHub API (token provided)")
+        headers["Authorization"] = f"token {token}"
+        logger.info("Using authenticated GitHub API")
     else:
-        print(f"Using unauthenticated GitHub API (limited to 60 requests/hour)")
-    s.headers.update(headers)
-    return s
+        logger.warning("Using unauthenticated API (60 requests/hour limit)")
+    session.headers.update(headers)
+    return session
 
 
-def paged_get(session: requests.Session, url: str):
+def paged_get(session: requests.Session, url: str) -> List[dict]:
+    """Fetch all pages from a paginated GitHub API endpoint."""
     items = []
     page = 1
+
     while url:
-        print(f"Fetching page {page} from {url}")
+        logger.debug(f"Fetching page {page}: {url}")
         try:
-            r = session.get(url, timeout=10)
-            r.raise_for_status()
+            response = session.get(url, timeout=REQUEST_TIMEOUT)
+            response.raise_for_status()
         except requests.exceptions.Timeout:
-            print(f"Timeout fetching {url}")
+            logger.error(f"Request timeout: {url}")
             sys.exit(1)
         except requests.exceptions.HTTPError as e:
-            print(f"HTTP Error {r.status_code}: {r.text}")
+            logger.error(f"HTTP {response.status_code}: {response.text}")
             sys.exit(1)
-        except Exception as e:
-            print(f"Error fetching {url}: {e}")
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Request failed: {e}")
             sys.exit(1)
-        
-        items.extend(r.json())
-        
-        # parse Link header for next
-        link = r.headers.get('Link', '')
-        next_url = None
-        if 'rel="next"' in link:
-            parts = link.split(',')
-            for p in parts:
-                if 'rel="next"' in p:
-                    # format: <url>; rel="next"
-                    urlpart = p.split(';')[0].strip()
-                    if urlpart.startswith('<') and urlpart.endswith('>'):
-                        next_url = urlpart[1:-1]
-        url = next_url
+
+        items.extend(response.json())
+
+        # Parse Link header for pagination
+        url = parse_next_link(response.headers.get("Link", ""))
         page += 1
-    
-    print(f"Fetched {len(items)} items total")
+
+    logger.info(f"Fetched {len(items)} items")
     return items
 
 
-def fetch_contributors(session: requests.Session, owner: str, repo: str):
-    url = f"{API_BASE}/repos/{owner}/{repo}/contributors?per_page=100"
-    print(f"Fetching contributors from {url}")
+def parse_next_link(link_header: str) -> Optional[str]:
+    """Extract next page URL from Link header."""
+    if 'rel="next"' not in link_header:
+        return None
+
+    for part in link_header.split(","):
+        if 'rel="next"' in part:
+            url_part = part.split(";")[0].strip()
+            if url_part.startswith("<") and url_part.endswith(">"):
+                return url_part[1:-1]
+    return None
+
+
+def fetch_contributors(session: requests.Session, owner: str, repo: str) -> List[dict]:
+    """Fetch all contributors for a repository."""
+    url = f"{API_BASE}/repos/{owner}/{repo}/contributors?per_page={PER_PAGE}"
+    logger.info(f"Fetching contributors for {owner}/{repo}")
     return paged_get(session, url)
 
 
-def fetch_user(session: requests.Session, login: str):
+def fetch_user(session: requests.Session, login: str) -> Optional[dict]:
+    """Fetch detailed user profile."""
     url = f"{API_BASE}/users/{login}"
     try:
-        r = session.get(url, timeout=10)
-        r.raise_for_status()
-        return r.json()
-    except Exception as e:
-        print(f"Warning: Failed to fetch user {login}: {e}")
+        response = session.get(url, timeout=REQUEST_TIMEOUT)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        logger.warning(f"Failed to fetch user {login}: {e}")
         return None
 
 
-def main(argv: List[str]):
-    p = argparse.ArgumentParser()
-    p.add_argument('--owner', required=True)
-    p.add_argument('--repo', required=True)
-    p.add_argument('--output', default='docs/data/contributors.yml')
-    p.add_argument('--full', action='store_true', help='Fetch full user profile (extra API calls)')
-    args = p.parse_args(argv)
+def process_contributors(
+    session: requests.Session,
+    contributors: List[dict],
+    fetch_full: bool
+) -> List[dict]:
+    """Process contributor data into output format."""
+    output = []
 
-    print(f"Starting contributors fetch for {args.owner}/{args.repo}")
-    
-    token = os.environ.get('GITHUB_TOKEN')
-    if token:
-        print(f"GITHUB_TOKEN is set")
-    else:
-        print(f"Warning: GITHUB_TOKEN not set, using unauthenticated API")
-    
+    for i, contributor in enumerate(contributors, 1):
+        entry = {
+            "login": contributor.get("login"),
+            "html_url": contributor.get("html_url"),
+            "avatar_url": contributor.get("avatar_url"),
+            "contributions": contributor.get("contributions"),
+        }
+
+        if fetch_full and contributor.get("login"):
+            user = fetch_user(session, contributor["login"])
+            if user:
+                if user.get("name"):
+                    entry["name"] = user["name"]
+                if user.get("email"):
+                    entry["email"] = user["email"]
+
+        if i % PROGRESS_INTERVAL == 0:
+            logger.info(f"Processed {i}/{len(contributors)} contributors")
+
+        output.append(entry)
+
+    return output
+
+
+def write_output(data: List[dict], output_path: str) -> None:
+    """Write contributor data to YAML file."""
+    output_dir = os.path.dirname(output_path)
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        yaml.safe_dump(data, f, allow_unicode=True, sort_keys=False)
+
+    logger.info(f"Wrote {len(data)} contributors to {output_path}")
+
+
+def main(argv: List[str]) -> None:
+    """Main entry point."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--owner", required=True, help="GitHub repo owner")
+    parser.add_argument("--repo", required=True, help="GitHub repo name")
+    parser.add_argument("--output", default=DEFAULT_OUTPUT, help="Output path")
+    parser.add_argument("--full", action="store_true", help="Fetch full profiles")
+    parser.add_argument("--debug", action="store_true", help="Enable debug logging")
+    args = parser.parse_args(argv)
+
+    if args.debug:
+        logging.getLogger().setLevel(logging.DEBUG)
+
+    token = os.environ.get("GITHUB_TOKEN")
     session = get_session(token)
 
-    print(f"Fetching contributors for {args.owner}/{args.repo} ...")
     try:
         contributors = fetch_contributors(session, args.owner, args.repo)
     except Exception as e:
-        print(f"Error fetching contributors: {e}")
+        logger.error(f"Failed to fetch contributors: {e}")
         sys.exit(2)
 
     if not contributors:
-        print(f"Warning: No contributors found")
+        logger.warning("No contributors found")
 
-    out = []
-    for i, c in enumerate(contributors, 1):
-        entry = {
-            'login': c.get('login'),
-            'html_url': c.get('html_url'),
-            'avatar_url': c.get('avatar_url'),
-            'contributions': c.get('contributions')
-        }
-        if args.full and c.get('login'):
-            try:
-                user = fetch_user(session, c['login'])
-                if user:
-                    # include name if present
-                    if user.get('name'):
-                        entry['name'] = user.get('name')
-                    if user.get('email'):
-                        entry['email'] = user.get('email')
-            except Exception as e:
-                # ignore failure to fetch user details
-                print(f"Failed to fetch full profile for {c['login']}: {e}")
-                pass
-        
-        if i % 10 == 0:
-            print(f"Processed {i} contributors")
-        out.append(entry)
-
-    # ensure output dir exists
-    out_dir = os.path.dirname(args.output)
-    if out_dir:
-        try:
-            os.makedirs(out_dir, exist_ok=True)
-            print(f"Output directory ready: {out_dir}")
-        except Exception as e:
-            print(f"Error creating output directory {out_dir}: {e}")
-            sys.exit(1)
-
-    try:
-        with open(args.output, 'w', encoding='utf-8') as fh:
-            yaml.safe_dump(out, fh, allow_unicode=True, sort_keys=False)
-        print(f"Successfully wrote {len(out)} contributors to {args.output}")
-    except Exception as e:
-        print(f"Error writing output file {args.output}: {e}")
-        sys.exit(1)
+    output = process_contributors(session, contributors, args.full)
+    write_output(output, args.output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv[1:])

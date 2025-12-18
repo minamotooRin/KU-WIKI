@@ -1,74 +1,72 @@
 # KU-WIKI
 
-本WIKI基于[mkdocs.org](https://www.mkdocs.org).
-本WIKI基于[mkdocs.org](https://www.mkdocs.org).
+京都大学中文学生指南 - 基于 [MkDocs](https://www.mkdocs.org) 和 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) 构建。
 
 欢迎大家一起来施工喵。
 
-NOTE：这是README，主页显示的是`docs/index.html`
+> **注意**: 这是 README，网站主页内容在 `docs/index.md`
 
-## 如何编辑
+## 快速开始
 
-请在`main`分支下进行编辑。
-
-总之先在`docs`里写文档，`mkdocs.yml`里写目录吧。
-图片请在各自的目录下创建`assets/images`。
-
-安装 `mkdocs` 以进行测试：
+### 安装依赖
 
 ```shell
-pip install mkdocs
+pip install -r requirements.txt
 ```
 
-使用如下指令在本地搭建服务器以测试：
+### 本地预览
 
 ```shell
-python -m mkdocs serve
+mkdocs serve
 ```
 
-使用如下指令编译（？）项目：
+访问 http://127.0.0.1:8000 预览网站。
+
+### 构建静态文件
 
 ```shell
-python -m mkdocs build
+mkdocs build
 ```
 
-使用如下指令推送项目到`gh-pages`分支（部署用分支）：
-```
-python -m mkdocs build
-```
-别忘了再推送到此`main`分支（开发分支）。
+## 如何贡献
 
-使用如下指令打印帮助：
+1. 在 `main` 分支下进行编辑
+2. 文档放在 `docs/` 目录
+3. 图片放在对应文档目录的 `assets/images/` 下
+4. 导航配置在 `mkdocs.yml` 的 `nav` 部分
+
+详细贡献指南请参阅 [CONTRIBUTING.md](CONTRIBUTING.md)。
+
+## 项目结构
+
+```
+mkdocs.yml          # MkDocs 配置文件
+docs/
+  index.md          # 网站首页
+  academic/         # 科研相关
+  finance/          # 金融服务
+  misc/             # 杂项
+  ...
+scripts/            # 自动化脚本
+```
+
+## 使用 Docker
 
 ```shell
-mkdocs -h
-```
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
-
-## 使用Docker构建本地环境
-
-进入到工程目录下，运行下面的命令构建容器
-
-```shell
+# 启动容器
 docker compose up
-```
 
-进入到容器内Terminal
-
-```shell
+# 进入容器
 docker compose exec mkdocs bash
+
+# 在容器内启动服务
+mkdocs serve --dev-addr 0.0.0.0:8000
 ```
 
-执行构建命令
+## 部署
 
-```shell
-python -m mkdocs build
+推送到 `main` 分支后，GitHub Actions 会自动构建并部署到 GitHub Pages。
 
-python -m mkdocs serve -a 0.0.0.0:8000/
-```
+## 许可
+
+本项目内容仅供参考，不代表官方立场。
