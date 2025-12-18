@@ -1,5 +1,4 @@
 # KU-WIKI
-# KU-WIKI
 
 本WIKI基于[mkdocs.org](https://www.mkdocs.org).
 本WIKI基于[mkdocs.org](https://www.mkdocs.org).
