@@ -22,7 +22,7 @@
     <div class="star star4">✨</div>
     <img src="../assets/images/001.png" alt="001" style="display: block; width: 200px; height: auto; border-radius: 8px; transition: transform 0.3s ease;">
   </div>
-  <div style="color: rgba(255,255,255,0.7); font-size: 0.8em; margin-top: 8px; z-index: 10;">👆 点击有惊喜</div>
+  <div style="color: rgba(255,255,255,0.7); font-size: 0.8em; margin-top: 8px; z-index: 10;">👆 点击膜拜</div>
 
   <!-- 标语 -->
   <div id="memorial-slogan" style="margin-top: 25px; font-size: 1.8em; font-weight: bold; letter-spacing: 4px; z-index: 10; background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #8b00ff, #ff0000); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: rainbow 3s linear infinite;">
