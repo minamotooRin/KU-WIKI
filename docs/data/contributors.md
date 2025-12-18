@@ -6,10 +6,10 @@
   <a href="https://github.com/KuoChing-cmd" title="KuoChing-cmd (27 contributions)" style="text-decoration: none;">
     <img src="https://avatars.githubusercontent.com/u/44957404?v=4&s=120" width="60" height="60" alt="KuoChing-cmd" style="border-radius: 50%; margin: 5px;" />
   </a>
-  <a href="https://github.com/minamotooRin" title="minamotooRin (22 contributions)" style="text-decoration: none;">
+  <a href="https://github.com/minamotooRin" title="minamotooRin (24 contributions)" style="text-decoration: none;">
     <img src="https://avatars.githubusercontent.com/u/99532285?v=4&s=120" width="60" height="60" alt="minamotooRin" style="border-radius: 50%; margin: 5px;" />
   </a>
-  <a href="https://github.com/apps/github-actions" title="github-actions[bot] (8 contributions)" style="text-decoration: none;">
+  <a href="https://github.com/apps/github-actions" title="github-actions[bot] (9 contributions)" style="text-decoration: none;">
     <img src="https://avatars.githubusercontent.com/in/15368?v=4&s=120" width="60" height="60" alt="github-actions[bot]" style="border-radius: 50%; margin: 5px;" />
   </a>
 </div>
