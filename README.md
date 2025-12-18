@@ -1,6 +1,8 @@
 # KU-WIKI
 
-京都大学中文学生指南 - 欢迎大家一起来施工喵。
+京都大学中文学生指南 - 基于 [MkDocs](https://www.mkdocs.org) 和 [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/) 构建。
+
+欢迎大家一起来施工喵。
 
 ## 什么是 MkDocs？
 
