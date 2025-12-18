@@ -1,23 +1,24 @@
 # 贡献指南
 
-感谢你对 KU-WIKI 的关注！以下是三种贡献方式，按难度排序。
+感谢你对 KU-WIKI 的关注！以下是贡献方式，按难度排序。
 
 ---
 
-## 方式一：可视化编辑（推荐）
+## 方式一：提交 Issue（最简单）
 
-访问 [在线编辑器](https://minamotoorin.github.io/KU-WIKI/admin/) → GitHub 登录 → 选择分类 → 编辑 → 保存
+不需要懂 Git，填写表单即可：
 
-所有修改会自动创建 PR，维护者审核后发布。
+- [新增内容](https://github.com/minamotooRin/KU-WIKI/issues/new?template=new-content.yml) - 提交新文档
+- [修改建议](https://github.com/minamotooRin/KU-WIKI/issues/new?template=edit-suggestion.yml) - 建议修改现有内容
 
 ---
 
-## 方式二：提交 Issue
+## 方式二：GitHub 网页编辑
 
-不想登录编辑器？直接提交 Issue：
-
-- [新增内容](https://github.com/minamotooRin/KU-WIKI/issues/new?template=new-content.yml)
-- [修改建议](https://github.com/minamotooRin/KU-WIKI/issues/new?template=edit-suggestion.yml)
+1. 打开 [docs 目录](https://github.com/minamotooRin/KU-WIKI/tree/main/docs)
+2. 找到要编辑的文件，点击进入
+3. 点击右上角 ✏️ 铅笔图标
+4. 编辑后点击 "Propose changes"
 
 ---
 
@@ -41,7 +42,6 @@
 ```shell
 pip install -r requirements.txt
 mkdocs serve
-# 访问 http://127.0.0.1:8000
 ```
 
 ---

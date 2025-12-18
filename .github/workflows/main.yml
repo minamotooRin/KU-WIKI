@@ -51,8 +51,6 @@ jobs:
       - name: Build and Deploy
         run: |
           mkdocs build
-          # 确保 admin 目录被复制到输出
-          cp -r docs/admin site/admin
           mkdocs gh-deploy --force
 
   # Update contributors list from GitHub API
