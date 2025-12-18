@@ -55,6 +55,9 @@ plugins:
   - search:
       lang: zh
 
+exclude_docs: |
+  admin/
+
 nav:
   - Home: index.md
   - 快速指南: practical.md

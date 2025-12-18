@@ -1,0 +1,28 @@
+name: "\U0001F4DD 新增内容"
+description: 提交新文档
+labels: ["content"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: 标题
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: 分类
+      options:
+        - 生活指南
+        - 科研
+        - 金融
+        - 杂项
+    validations:
+      required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: 内容
+      description: Markdown 格式
+    validations:
+      required: true

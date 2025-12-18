@@ -1,0 +1,16 @@
+name: "\u270F\uFE0F 修改建议"
+description: 建议修改现有内容
+labels: ["suggestion"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: 页面链接
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: 修改建议
+    validations:
+      required: true
