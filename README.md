@@ -67,6 +67,13 @@ mkdocs serve --dev-addr 0.0.0.0:8000
 
 推送到 `main` 分支后，GitHub Actions 会自动构建并部署到 GitHub Pages。
 
+## 手动 部署
+
+```shell
+mkdocs build
+mkdocs gh-deploy
+```
+
 ## 许可
 
 本项目内容仅供参考，不代表官方立场。
