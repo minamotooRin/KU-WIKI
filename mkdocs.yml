@@ -6,6 +6,7 @@ site_author: KyotoU informatics
 theme:
   name: material
   language: zh
+  custom_dir: docs/overrides
   palette:
     - scheme: default
       primary: teal
